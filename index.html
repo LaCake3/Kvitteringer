@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>PDF Generator</h1>
+        <input type="file" id="imageUpload" accept="image/*" multiple>
+        <input type="text" id="pdfName" placeholder="Indtast filnavn">
+        <textarea id="text1" placeholder="Indtast tekst 1"></textarea>
+        <textarea id="text2" placeholder="Indtast tekst 2"></textarea>
+        <button id="generatePdfBtn">Gem som PDF</button>
+        <div id="preview"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

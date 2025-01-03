@@ -77,6 +77,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const margin = 10; // 1 cm margin
     const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin); // Max 4/6 af siden til billedet
     const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin); // 2/6 til tekst
+    const spaceBetweenBoxes = 5; // Afstand mellem tekstfelter
     const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
 
     images.forEach((image, index) => {
@@ -101,21 +102,25 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
 
             // Tekstfelter i den nederste 2/6
             const textYStart = yOffset + scaledHeight + 10;
-            const textBoxWidth = (pageWidth - 3 * margin) / 2; // 2 tekstbokse ved siden af hinanden
+            const totalTextWidth = pageWidth - 2 * margin;
+            const textBoxWidth = (totalTextWidth - spaceBetweenBoxes) / 2; // Beregn bredden for begge bokse
+
+            const box1XStart = margin + spaceBetweenBoxes / 2; // Justeret start for tekst 1
+            const box2XStart = box1XStart + textBoxWidth + spaceBetweenBoxes; // Justeret start for tekst 2
 
             // Tekst 1
             const text1 = document.getElementById("text1").value.trim();
             pdf.setFont("helvetica", "bold");
-            pdf.text("Tekst 1", margin, textYStart);
+            pdf.text("Tekst 1", box1XStart, textYStart);
             pdf.setFont("helvetica", "normal");
-            pdf.text(text1, margin, textYStart + 10, { maxWidth: textBoxWidth });
+            pdf.text(text1, box1XStart, textYStart + 10, { maxWidth: textBoxWidth });
 
             // Tekst 2
             const text2 = document.getElementById("text2").value.trim();
             pdf.setFont("helvetica", "bold");
-            pdf.text("Tekst 2", margin + textBoxWidth + margin, textYStart);
+            pdf.text("Tekst 2", box2XStart, textYStart);
             pdf.setFont("helvetica", "normal");
-            pdf.text(text2, margin + textBoxWidth + margin, textYStart + 10, { maxWidth: textBoxWidth });
+            pdf.text(text2, box2XStart, textYStart + 10, { maxWidth: textBoxWidth });
         };
     });
 

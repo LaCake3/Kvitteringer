@@ -53,26 +53,14 @@ function correctOrientation(img, orientation) {
     }
 
     switch (orientation) {
-        case 2:
-            ctx.transform(-1, 0, 0, 1, width, 0); // Flip horisontalt
-            break;
-        case 3:
-            ctx.transform(-1, 0, 0, -1, width, height); // 180 grader
-            break;
-        case 4:
-            ctx.transform(1, 0, 0, -1, 0, height); // Flip vertikalt
-            break;
-        case 5:
-            ctx.transform(0, 1, 1, 0, 0, 0); // 90 grader med flip
-            break;
         case 6:
             ctx.transform(0, 1, -1, 0, height, 0); // 90 grader CW
             break;
-        case 7:
-            ctx.transform(0, -1, -1, 0, height, width); // 90 grader CCW med flip
-            break;
         case 8:
             ctx.transform(0, -1, 1, 0, 0, width); // 90 grader CCW
+            break;
+        case 3:
+            ctx.transform(-1, 0, 0, -1, width, height); // 180 grader
             break;
         default:
             break; // Ingen rotation
@@ -89,6 +77,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pageHeight = 297; // A4 højde i mm
     const margin = 10; // 1 cm margin
     const maxImageHeight = (2 / 3) * (pageHeight - 2 * margin); // Max 2/3 af siden til billedet
+    const textBoxHeight = (1 / 3) * (pageHeight - 2 * margin); // 1/3 til tekst
     const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
 
     images.forEach((image, index) => {
@@ -104,12 +93,30 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             const scaledWidth = imgWidth * scaleFactor;
             const scaledHeight = imgHeight * scaleFactor;
 
-            // Center billedet horisontalt
+            // Center billedet horisontalt og placer det øverst i den vertikale plads
             const xOffset = (pageWidth - scaledWidth) / 2;
             const yOffset = margin;
 
             if (index > 0) pdf.addPage();
             pdf.addImage(image, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
+
+            // Tekstfelter i den nederste 1/3
+            const textYStart = yOffset + scaledHeight + 10;
+            const textBoxWidth = (pageWidth - 3 * margin) / 2; // 2 tekstbokse ved siden af hinanden
+
+            // Tekst 1
+            const text1 = document.getElementById("text1").value.trim();
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Tekst 1", margin, textYStart);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(text1, margin, textYStart + 10, { maxWidth: textBoxWidth });
+
+            // Tekst 2
+            const text2 = document.getElementById("text2").value.trim();
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Tekst 2", margin + textBoxWidth + margin, textYStart);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(text2, margin + textBoxWidth + margin, textYStart + 10, { maxWidth: textBoxWidth });
         };
     });
 

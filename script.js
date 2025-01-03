@@ -20,14 +20,25 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
 
                     images.push(correctedImg);
 
-                    // Tilføj billedet til preview
+                    // Tilføj billedet til preview med slet-knap
                     const container = document.createElement("div");
                     container.className = "preview-container";
 
                     const imgElement = document.createElement("img");
                     imgElement.src = correctedImg;
-                    container.appendChild(imgElement);
 
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.className = "delete-btn";
+                    deleteBtn.innerText = "X";
+                    deleteBtn.onclick = () => {
+                        // Fjern billedet fra listen og DOM
+                        const index = images.indexOf(correctedImg);
+                        if (index > -1) images.splice(index, 1);
+                        preview.removeChild(container);
+                    };
+
+                    container.appendChild(imgElement);
+                    container.appendChild(deleteBtn);
                     preview.appendChild(container);
                 });
             };

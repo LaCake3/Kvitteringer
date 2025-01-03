@@ -43,17 +43,31 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
         img.src = image;
 
         img.onload = () => {
-            const imgAspectRatio = img.width / img.height;
-            let imgWidth = pageWidth - 2 * margin; // Juster for margin
-            let imgHeight = imgWidth / imgAspectRatio;
+            const imgWidth = img.width;
+            const imgHeight = img.height;
 
-            if (imgHeight > pageHeight - 2 * margin) {
-                imgHeight = pageHeight - 2 * margin;
-                imgWidth = imgHeight * imgAspectRatio;
+            // Bestem billedets skaleringsfaktor baseret på dets længste side
+            let scaleFactor;
+            if (imgWidth > imgHeight) {
+                // Liggende billede
+                scaleFactor = (pageWidth - 2 * margin) / imgWidth;
+            } else {
+                // Stående billede
+                scaleFactor = (pageHeight - 2 * margin) / imgHeight;
             }
 
+            const scaledWidth = imgWidth * scaleFactor;
+            const scaledHeight = imgHeight * scaleFactor;
+
             if (index > 0) pdf.addPage();
-            pdf.addImage(image, "JPEG", margin + (pageWidth - 2 * margin - imgWidth) / 2, margin, imgWidth, imgHeight);
+            pdf.addImage(
+                image,
+                "JPEG",
+                margin + (pageWidth - scaledWidth) / 2, // Centreret horisontalt
+                margin + (pageHeight - scaledHeight) / 2, // Centreret vertikalt
+                scaledWidth,
+                scaledHeight
+            );
         };
     });
 

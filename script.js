@@ -111,14 +111,14 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             // Tekst 1
             const text1 = document.getElementById("text1").value.trim();
             pdf.setFont("helvetica", "bold");
-            pdf.text("Tekst 1", box1XStart, textYStart);
+            pdf.text("Byggeplads/adresse", box1XStart, textYStart);
             pdf.setFont("helvetica", "normal");
             pdf.text(text1, box1XStart, textYStart + 10, { maxWidth: textBoxWidth });
 
             // Tekst 2
             const text2 = document.getElementById("text2").value.trim();
             pdf.setFont("helvetica", "bold");
-            pdf.text("Tekst 2", box2XStart, textYStart);
+            pdf.text("Deltagere", box2XStart, textYStart);
             pdf.setFont("helvetica", "normal");
             pdf.text(text2, box2XStart, textYStart + 10, { maxWidth: textBoxWidth });
         };

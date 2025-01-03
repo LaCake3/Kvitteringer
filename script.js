@@ -16,16 +16,17 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
             img.onload = () => {
                 EXIF.getData(img, function () {
                     const orientation = EXIF.getTag(this, "Orientation") || 1;
-                    const correctedImg = correctOrientation(img, orientation);
+                    const correctedImg = ensureVertical(img, orientation);
 
                     images.push(correctedImg);
 
-                    // Tilføj billedet til preview med slet-knap
+                    // Tilføj billedet til preview
                     const container = document.createElement("div");
                     container.className = "preview-container";
 
                     const imgElement = document.createElement("img");
                     imgElement.src = correctedImg;
+                    container.appendChild(imgElement);
 
                     const deleteBtn = document.createElement("button");
                     deleteBtn.className = "delete-btn";
@@ -37,7 +38,6 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
                         preview.removeChild(container);
                     };
 
-                    container.appendChild(imgElement);
                     container.appendChild(deleteBtn);
                     preview.appendChild(container);
                 });
@@ -47,34 +47,22 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
     }
 });
 
-// Funktion til at rette billedorienteringen
-function correctOrientation(img, orientation) {
+// Funktion til at sikre vertikal orientering
+function ensureVertical(img, orientation) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
     let width = img.width;
     let height = img.height;
 
-    if (orientation === 6 || orientation === 8) {
+    // Tving rotation, hvis billedet er horisontalt
+    if (width > height) {
         canvas.width = height;
         canvas.height = width;
+        ctx.transform(0, 1, -1, 0, height, 0); // Roter 90 grader CW
     } else {
         canvas.width = width;
         canvas.height = height;
-    }
-
-    switch (orientation) {
-        case 6:
-            ctx.transform(0, 1, -1, 0, height, 0); // 90 grader CW
-            break;
-        case 8:
-            ctx.transform(0, -1, 1, 0, 0, width); // 90 grader CCW
-            break;
-        case 3:
-            ctx.transform(-1, 0, 0, -1, width, height); // 180 grader
-            break;
-        default:
-            break; // Ingen rotation
     }
 
     ctx.drawImage(img, 0, 0);

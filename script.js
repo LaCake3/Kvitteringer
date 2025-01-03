@@ -10,24 +10,22 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const imgSrc = e.target.result;
-
-            // Tilføj billedet til listen og preview
             const img = new Image();
             img.src = imgSrc;
 
             img.onload = () => {
                 EXIF.getData(img, function () {
                     const orientation = EXIF.getTag(this, "Orientation") || 1;
-                    const rotatedImg = rotateImage(img, orientation);
+                    const correctedImg = correctOrientation(img, orientation);
 
-                    images.push(rotatedImg);
+                    images.push(correctedImg);
 
                     // Tilføj billedet til preview
                     const container = document.createElement("div");
                     container.className = "preview-container";
 
                     const imgElement = document.createElement("img");
-                    imgElement.src = rotatedImg;
+                    imgElement.src = correctedImg;
                     container.appendChild(imgElement);
 
                     preview.appendChild(container);
@@ -38,10 +36,11 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
     }
 });
 
-// Funktion til at rotere billedet baseret på EXIF-orientering
-function rotateImage(img, orientation) {
+// Funktion til at rette billedorienteringen
+function correctOrientation(img, orientation) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
+
     let width = img.width;
     let height = img.height;
 
@@ -86,10 +85,10 @@ function rotateImage(img, orientation) {
 // Generér PDF
 document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pdf = new jsPDF('portrait', 'mm', 'a4');
-    const pageWidth = 210;
-    const pageHeight = 297;
-    const margin = 10;
-    const maxImageHeight = (2 / 3) * (pageHeight - 2 * margin);
+    const pageWidth = 210; // A4 bredde i mm
+    const pageHeight = 297; // A4 højde i mm
+    const margin = 10; // 1 cm margin
+    const maxImageHeight = (2 / 3) * (pageHeight - 2 * margin); // Max 2/3 af siden til billedet
     const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
 
     images.forEach((image, index) => {
@@ -97,13 +96,15 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
         img.src = image;
 
         img.onload = () => {
-            const imgWidth = img.width * 0.264583;
+            const imgWidth = img.width * 0.264583; // Konverter pixels til mm
             const imgHeight = img.height * 0.264583;
 
+            // Skaler billedet til at passe inden for 2/3 af siden
             const scaleFactor = Math.min((pageWidth - 2 * margin) / imgWidth, maxImageHeight / imgHeight);
             const scaledWidth = imgWidth * scaleFactor;
             const scaledHeight = imgHeight * scaleFactor;
 
+            // Center billedet horisontalt
             const xOffset = (pageWidth - scaledWidth) / 2;
             const yOffset = margin;
 

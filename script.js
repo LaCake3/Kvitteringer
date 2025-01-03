@@ -10,29 +10,20 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const imgSrc = e.target.result;
-            images.push(imgSrc);
 
-            // Opret en container til billedet og sletteknappen
+            // Tilføj billedet til listen og preview
+            const img = new Image();
+            img.src = imgSrc;
+            images.push(img);
+
+            // Tilføj billedet til preview
             const container = document.createElement("div");
             container.className = "preview-container";
 
-            // Billedet
-            const img = document.createElement("img");
-            img.src = imgSrc;
+            const imgElement = document.createElement("img");
+            imgElement.src = imgSrc;
+            container.appendChild(imgElement);
 
-            // Sletteknap
-            const deleteBtn = document.createElement("button");
-            deleteBtn.className = "delete-btn";
-            deleteBtn.innerText = "X";
-            deleteBtn.addEventListener("click", () => {
-                // Slet billede fra array og DOM
-                const index = images.indexOf(imgSrc);
-                if (index > -1) images.splice(index, 1);
-                preview.removeChild(container);
-            });
-
-            container.appendChild(img);
-            container.appendChild(deleteBtn);
             preview.appendChild(container);
         };
         reader.readAsDataURL(file);
@@ -45,54 +36,57 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pageWidth = 210; // A4 bredde i mm
     const pageHeight = 297; // A4 højde i mm
     const margin = 10; // 1 cm margin
-    const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile"; // Standardnavn hvis feltet er tomt
+    const maxImageHeight = (2 / 3) * (pageHeight - 2 * margin); // Max 2/3 af siden til billedet
+    const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
 
     images.forEach((image, index) => {
         const img = new Image();
-        img.src = image;
+        img.src = image.src;
 
         img.onload = () => {
-            const imgAspectRatio = img.width / img.height;
-            let imgWidth = pageWidth - 2 * margin; // Juster for margin
-            let imgHeight = imgWidth / imgAspectRatio;
+            let imgWidth = img.width * 0.264583; // Konverter pixels til mm
+            let imgHeight = img.height * 0.264583;
 
-            if (imgHeight > pageHeight - 2 * margin) {
-                imgHeight = pageHeight - 2 * margin;
-                imgWidth = imgHeight * imgAspectRatio;
+            // Roter billedet, hvis det er liggende
+            if (imgWidth > imgHeight) {
+                const temp = imgWidth;
+                imgWidth = imgHeight;
+                imgHeight = temp;
             }
 
+            // Skalér billedet til at passe inden for 2/3 af siden
+            const scaleFactor = Math.min((pageWidth - 2 * margin) / imgWidth, maxImageHeight / imgHeight);
+            const scaledWidth = imgWidth * scaleFactor;
+            const scaledHeight = imgHeight * scaleFactor;
+
+            // Center billedet horisontalt
+            const xOffset = (pageWidth - scaledWidth) / 2;
+            const yOffset = margin;
+
             if (index > 0) pdf.addPage();
-            pdf.addImage(image, "JPEG", margin + (pageWidth - 2 * margin - imgWidth) / 2, margin, imgWidth, imgHeight);
+            pdf.addImage(image.src, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
+
+            // Placer tekst i den nederste 1/3
+            const textYStart = yOffset + scaledHeight + 10; // Start lige under billedet
+            const textBoxWidth = (pageWidth - 3 * margin) / 2; // 2 tekstbokse ved siden af hinanden
+
+            // Tekst 1
+            const text1 = document.getElementById("text1").value.trim();
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Tekst 1", margin, textYStart);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(text1, margin, textYStart + 10, { maxWidth: textBoxWidth });
+
+            // Tekst 2
+            const text2 = document.getElementById("text2").value.trim();
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Tekst 2", margin + textBoxWidth + margin, textYStart);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(text2, margin + textBoxWidth + margin, textYStart + 10, { maxWidth: textBoxWidth });
         };
     });
 
-    // Tilføj tekst med overskrifter, hvis der er tekst indtastet
     setTimeout(() => {
-        const text1 = document.getElementById("text1").value.trim();
-        const text2 = document.getElementById("text2").value.trim();
-
-        if (text1 || text2) {
-            pdf.addPage();
-
-            let yPosition = margin + 10; // Startplacering for teksten efter overskriften
-
-            if (text1) {
-                pdf.setFont("helvetica", "bold");
-                pdf.text("Overskrift for Tekst 1", margin, margin);
-                pdf.setFont("helvetica", "normal");
-                pdf.text(text1, margin, yPosition);
-                yPosition += 10; // Flyt til næste tekstblok
-            }
-
-            if (text2) {
-                pdf.setFont("helvetica", "bold");
-                pdf.text("Overskrift for Tekst 2", margin, yPosition);
-                pdf.setFont("helvetica", "normal");
-                pdf.text(text2, margin, yPosition + 10);
-            }
-        }
-
-        // Gem PDF med det valgte navn
         pdf.save(`${pdfName}.pdf`);
-    }, 1000); // Giv billeder tid til at indlæses
+    }, 1000);
 });

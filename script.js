@@ -75,8 +75,8 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pageWidth = 210; // A4 bredde i mm
     const pageHeight = 297; // A4 højde i mm
     const margin = 10; // 1 cm margin
-    const maxImageHeight = (3 / 4) * (pageHeight - 2 * margin); // Max 3/4 af siden til billedet
-    const textBoxHeight = (1 / 4) * (pageHeight - 2 * margin); // 1/4 til tekst
+    const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin); // Max 4/6 af siden til billedet
+    const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin); // 2/6 til tekst
     const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
 
     images.forEach((image, index) => {
@@ -87,7 +87,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             const imgWidth = img.width * 0.264583; // Konverter pixels til mm
             const imgHeight = img.height * 0.264583;
 
-            // Skaler billedet til at passe inden for 3/4 af siden
+            // Skaler billedet til at passe inden for 4/6 af siden
             const scaleFactor = Math.min((pageWidth - 2 * margin) / imgWidth, maxImageHeight / imgHeight);
             const scaledWidth = imgWidth * scaleFactor;
             const scaledHeight = imgHeight * scaleFactor;
@@ -99,7 +99,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             if (index > 0) pdf.addPage();
             pdf.addImage(image, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
 
-            // Tekstfelter i den nederste 1/4
+            // Tekstfelter i den nederste 2/6
             const textYStart = yOffset + scaledHeight + 10;
             const textBoxWidth = (pageWidth - 3 * margin) / 2; // 2 tekstbokse ved siden af hinanden
 

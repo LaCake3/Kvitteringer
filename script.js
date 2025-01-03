@@ -10,75 +10,25 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const imgSrc = e.target.result;
+
+            // Tilføj billedet til listen og preview
             const img = new Image();
             img.src = imgSrc;
+            images.push(img);
 
-            img.onload = () => {
-                EXIF.getData(img, function () {
-                    const orientation = EXIF.getTag(this, "Orientation") || 1;
-                    const rotatedImg = rotateImage(img, orientation);
-                    images.push(rotatedImg);
+            // Tilføj billedet til preview
+            const container = document.createElement("div");
+            container.className = "preview-container";
 
-                    // Tilføj billedet til preview
-                    const container = document.createElement("div");
-                    container.className = "preview-container";
+            const imgElement = document.createElement("img");
+            imgElement.src = imgSrc;
+            container.appendChild(imgElement);
 
-                    const imgElement = document.createElement("img");
-                    imgElement.src = rotatedImg;
-                    container.appendChild(imgElement);
-
-                    preview.appendChild(container);
-                });
-            };
+            preview.appendChild(container);
         };
         reader.readAsDataURL(file);
     }
 });
-
-// Funktion til at rotere billeder baseret på EXIF-orientering
-function rotateImage(img, orientation) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    let width = img.width;
-    let height = img.height;
-
-    if (orientation === 6 || orientation === 8) {
-        canvas.width = height;
-        canvas.height = width;
-    } else {
-        canvas.width = width;
-        canvas.height = height;
-    }
-
-    switch (orientation) {
-        case 2:
-            ctx.transform(-1, 0, 0, 1, width, 0); // Flip horisontalt
-            break;
-        case 3:
-            ctx.transform(-1, 0, 0, -1, width, height); // 180 grader
-            break;
-        case 4:
-            ctx.transform(1, 0, 0, -1, 0, height); // Flip vertikalt
-            break;
-        case 5:
-            ctx.transform(0, 1, 1, 0, 0, 0); // 90 grader med flip
-            break;
-        case 6:
-            ctx.transform(0, 1, -1, 0, height, 0); // 90 grader CW
-            break;
-        case 7:
-            ctx.transform(0, -1, -1, 0, height, width); // 90 grader CCW med flip
-            break;
-        case 8:
-            ctx.transform(0, -1, 1, 0, 0, width); // 90 grader CCW
-            break;
-        default:
-            break; // Ingen rotation
-    }
-
-    ctx.drawImage(img, 0, 0);
-    return canvas.toDataURL("image/jpeg");
-}
 
 // Generér PDF
 document.getElementById("generatePdfBtn").addEventListener("click", () => {
@@ -90,31 +40,49 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
 
     images.forEach((image, index) => {
         const img = new Image();
-        img.src = image;
+        img.src = image.src;
 
         img.onload = () => {
-            const imgWidth = img.width;
-            const imgHeight = img.height;
+            const imgWidth = img.width * 0.264583; // Konverter pixels til mm
+            const imgHeight = img.height * 0.264583;
 
-            // Skaler baseret på længste side
-            let scaleFactor = Math.min(
-                (pageWidth - 2 * margin) / imgWidth,
-                (pageHeight - 2 * margin) / imgHeight
-            );
-
-            const scaledWidth = imgWidth * scaleFactor;
-            const scaledHeight = imgHeight * scaleFactor;
-
-            // Centrer billedet
-            const xOffset = (pageWidth - scaledWidth) / 2;
-            const yOffset = (pageHeight - scaledHeight) / 2;
+            // Beregn placering for at sikre margen
+            const xOffset = Math.max(margin, (pageWidth - imgWidth) / 2);
+            const yOffset = Math.max(margin, (pageHeight - imgHeight) / 2);
 
             if (index > 0) pdf.addPage();
-            pdf.addImage(image, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
+            pdf.addImage(image.src, "JPEG", xOffset, yOffset, imgWidth, imgHeight);
         };
     });
 
     setTimeout(() => {
+        const text1 = document.getElementById("text1").value.trim();
+        const text2 = document.getElementById("text2").value.trim();
+
+        if (text1 || text2) {
+            pdf.addPage();
+
+            let yPosition = margin; // Startplacering for teksten på siden
+
+            if (text1) {
+                pdf.setFont("helvetica", "bold");
+                pdf.text("Overskrift for Tekst 1", margin, yPosition);
+                yPosition += 10; // Flyt ned under overskriften
+                pdf.setFont("helvetica", "normal");
+                pdf.text(text1, margin, yPosition);
+                yPosition += 20; // Flyt til næste tekstblok
+            }
+
+            if (text2) {
+                pdf.setFont("helvetica", "bold");
+                pdf.text("Overskrift for Tekst 2", margin, yPosition);
+                yPosition += 10; // Flyt ned under overskriften
+                pdf.setFont("helvetica", "normal");
+                pdf.text(text2, margin, yPosition);
+            }
+        }
+
+        // Gem PDF med det valgte navn
         pdf.save(`${pdfName}.pdf`);
-    }, 1000);
+    }, 1000); // Giv billeder tid til at indlæses
 });

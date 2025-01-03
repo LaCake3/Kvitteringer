@@ -10,20 +10,31 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const imgSrc = e.target.result;
-
-            // Tilføj billedet til listen og preview
             const img = new Image();
             img.src = imgSrc;
-            images.push(img);
 
-            // Tilføj billedet til preview
+            // Tilføj billedet til listen
+            images.push(imgSrc);
+
+            // Tilføj billedet til preview med sletteknap
             const container = document.createElement("div");
             container.className = "preview-container";
 
             const imgElement = document.createElement("img");
             imgElement.src = imgSrc;
-            container.appendChild(imgElement);
 
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-btn";
+            deleteBtn.innerText = "X";
+            deleteBtn.onclick = () => {
+                // Fjern billedet fra listen og DOM
+                const index = images.indexOf(imgSrc);
+                if (index > -1) images.splice(index, 1);
+                preview.removeChild(container);
+            };
+
+            container.appendChild(imgElement);
+            container.appendChild(deleteBtn);
             preview.appendChild(container);
         };
         reader.readAsDataURL(file);
@@ -41,7 +52,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
 
     images.forEach((image, index) => {
         const img = new Image();
-        img.src = image.src;
+        img.src = image;
 
         img.onload = () => {
             let imgWidth = img.width * 0.264583; // Konverter pixels til mm
@@ -64,7 +75,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             const yOffset = margin;
 
             if (index > 0) pdf.addPage();
-            pdf.addImage(image.src, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
+            pdf.addImage(image, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
 
             // Placer tekst i den nederste 1/3
             const textYStart = yOffset + scaledHeight + 10; // Start lige under billedet

@@ -105,7 +105,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             const totalTextWidth = pageWidth - 2 * margin;
             const textBoxWidth = (totalTextWidth - spaceBetweenBoxes) / 2; // Beregn bredden for begge bokse
 
-            const box1XStart = margin + spaceBetweenBoxes / 2; // Justeret start for tekst 1
+            const box1XStart = (pageWidth - totalTextWidth) / 2; // Justeret start for tekst 1
             const box2XStart = box1XStart + textBoxWidth + spaceBetweenBoxes; // Justeret start for tekst 2
 
             // Tekst 1

@@ -14,7 +14,7 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
             // Tilføj billedet til listen og preview
             const img = new Image();
             img.src = imgSrc;
-            images.push(imgSrc);
+            images.push(img);
 
             // Tilføj billedet til preview
             const container = document.createElement("div");
@@ -40,31 +40,31 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
 
     images.forEach((image, index) => {
         const img = new Image();
-        img.src = image;
+        img.src = image.src;
 
         img.onload = () => {
             const imgWidth = img.width;
             const imgHeight = img.height;
 
-            // Bestem billedets skaleringsfaktor baseret på dets længste side
-            let scaleFactor;
-            if (imgWidth > imgHeight) {
-                // Liggende billede
-                scaleFactor = (pageWidth - 2 * margin) / imgWidth;
-            } else {
-                // Stående billede
-                scaleFactor = (pageHeight - 2 * margin) / imgHeight;
-            }
+            // Behold billedets oprindelige aspect ratio
+            let scaleFactor = Math.min(
+                (pageWidth - 2 * margin) / imgWidth, // Skaler baseret på bredde
+                (pageHeight - 2 * margin) / imgHeight // Skaler baseret på højde
+            );
 
             const scaledWidth = imgWidth * scaleFactor;
             const scaledHeight = imgHeight * scaleFactor;
 
+            // Centrer billedet inden for A4-siden
+            const xOffset = (pageWidth - scaledWidth) / 2;
+            const yOffset = (pageHeight - scaledHeight) / 2;
+
             if (index > 0) pdf.addPage();
             pdf.addImage(
-                image,
+                image.src,
                 "JPEG",
-                margin + (pageWidth - scaledWidth) / 2, // Centreret horisontalt
-                margin + (pageHeight - scaledHeight) / 2, // Centreret vertikalt
+                xOffset,
+                yOffset,
                 scaledWidth,
                 scaledHeight
             );

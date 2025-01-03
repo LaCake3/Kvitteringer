@@ -10,20 +10,29 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const imgSrc = e.target.result;
+            images.push(imgSrc);
 
-            // Tilføj billedet til listen og preview
-            const img = new Image();
-            img.src = imgSrc;
-            images.push(img);
-
-            // Tilføj billedet til preview
+            // Opret en container til billedet og sletteknappen
             const container = document.createElement("div");
             container.className = "preview-container";
 
-            const imgElement = document.createElement("img");
-            imgElement.src = imgSrc;
-            container.appendChild(imgElement);
+            // Billedet
+            const img = document.createElement("img");
+            img.src = imgSrc;
 
+            // Sletteknap
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-btn";
+            deleteBtn.innerText = "X";
+            deleteBtn.addEventListener("click", () => {
+                // Slet billede fra array og DOM
+                const index = images.indexOf(imgSrc);
+                if (index > -1) images.splice(index, 1);
+                preview.removeChild(container);
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
             preview.appendChild(container);
         };
         reader.readAsDataURL(file);
@@ -36,25 +45,28 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pageWidth = 210; // A4 bredde i mm
     const pageHeight = 297; // A4 højde i mm
     const margin = 10; // 1 cm margin
-    const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
+    const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile"; // Standardnavn hvis feltet er tomt
 
     images.forEach((image, index) => {
         const img = new Image();
-        img.src = image.src;
+        img.src = image;
 
         img.onload = () => {
-            const imgWidth = img.width * 0.264583; // Konverter pixels til mm
-            const imgHeight = img.height * 0.264583;
+            const imgAspectRatio = img.width / img.height;
+            let imgWidth = pageWidth - 2 * margin; // Juster for margin
+            let imgHeight = imgWidth / imgAspectRatio;
 
-            // Beregn placering for at sikre margen
-            const xOffset = Math.max(margin, (pageWidth - imgWidth) / 2);
-            const yOffset = Math.max(margin, (pageHeight - imgHeight) / 2);
+            if (imgHeight > pageHeight - 2 * margin) {
+                imgHeight = pageHeight - 2 * margin;
+                imgWidth = imgHeight * imgAspectRatio;
+            }
 
             if (index > 0) pdf.addPage();
-            pdf.addImage(image.src, "JPEG", xOffset, yOffset, imgWidth, imgHeight);
+            pdf.addImage(image, "JPEG", margin + (pageWidth - 2 * margin - imgWidth) / 2, margin, imgWidth, imgHeight);
         };
     });
 
+    // Tilføj tekst med overskrifter, hvis der er tekst indtastet
     setTimeout(() => {
         const text1 = document.getElementById("text1").value.trim();
         const text2 = document.getElementById("text2").value.trim();
@@ -62,23 +74,21 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
         if (text1 || text2) {
             pdf.addPage();
 
-            let yPosition = margin; // Startplacering for teksten på siden
+            let yPosition = margin + 10; // Startplacering for teksten efter overskriften
 
             if (text1) {
                 pdf.setFont("helvetica", "bold");
-                pdf.text("Overskrift for Tekst 1", margin, yPosition);
-                yPosition += 10; // Flyt ned under overskriften
+                pdf.text("Overskrift for Tekst 1", margin, margin);
                 pdf.setFont("helvetica", "normal");
                 pdf.text(text1, margin, yPosition);
-                yPosition += 20; // Flyt til næste tekstblok
+                yPosition += 10; // Flyt til næste tekstblok
             }
 
             if (text2) {
                 pdf.setFont("helvetica", "bold");
                 pdf.text("Overskrift for Tekst 2", margin, yPosition);
-                yPosition += 10; // Flyt ned under overskriften
                 pdf.setFont("helvetica", "normal");
-                pdf.text(text2, margin, yPosition);
+                pdf.text(text2, margin, yPosition + 10);
             }
         }
 

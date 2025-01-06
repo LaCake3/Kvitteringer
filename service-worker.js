@@ -1,4 +1,4 @@
-const cacheName = "pdf-generator-v1";
+const cacheName = "pdf-generator-v2";
 const staticAssets = [
     "./",
     "./index.html",

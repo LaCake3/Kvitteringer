@@ -34,10 +34,11 @@
     <script src="script.js"></script>
     <!-- Tilføj fix til iOS tekstfelter -->
     <script>
-        // Løsning for at sikre fokus i tekstfelter på iOS
+        // Løsning for at sikre korrekt fokus i tekstfelter på iOS
         document.querySelectorAll("textarea, input").forEach((field) => {
-            field.addEventListener("touchstart", () => {
-                field.focus();
+            field.addEventListener("touchstart", (event) => {
+                event.preventDefault(); // Forhindre dobbeltklik eller utilsigtet adfærd
+                field.focus(); // Fokusér kun det aktuelle felt
             });
         });
     </script>

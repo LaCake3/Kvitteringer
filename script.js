@@ -8,14 +8,12 @@ window.addEventListener("load", () => {
     const savedText2 = sessionStorage.getItem("text2") || "";
     const savedPdfName = sessionStorage.getItem("pdfName") || "";
 
-    images = savedImages; // Gendan billeder
+    images = savedImages;
 
-    // Genindlæs tekstfelterne
     document.getElementById("text1").value = savedText1;
     document.getElementById("text2").value = savedText2;
     document.getElementById("pdfName").value = savedPdfName;
 
-    // Gendan preview for billeder
     const preview = document.getElementById("preview");
     savedImages.forEach((imgSrc) => {
         const img = new Image();
@@ -31,11 +29,10 @@ window.addEventListener("load", () => {
         deleteBtn.className = "delete-btn";
         deleteBtn.innerText = "X";
         deleteBtn.onclick = () => {
-            // Fjern billedet fra listen og DOM
             const index = images.indexOf(imgSrc);
             if (index > -1) images.splice(index, 1);
             preview.removeChild(container);
-            saveData(); // Opdater sessionStorage
+            saveData();
         };
 
         container.appendChild(imgElement);
@@ -44,7 +41,6 @@ window.addEventListener("load", () => {
     });
 });
 
-// Gem data i sessionStorage
 function saveData() {
     sessionStorage.setItem("images", JSON.stringify(images));
     sessionStorage.setItem("text1", document.getElementById("text1").value.trim());
@@ -71,7 +67,6 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
 
                     images.push(correctedImg);
 
-                    // Tilføj billedet til preview med slet-knap
                     const container = document.createElement("div");
                     container.className = "preview-container";
 
@@ -82,18 +77,17 @@ document.getElementById("imageUpload").addEventListener("change", (event) => {
                     deleteBtn.className = "delete-btn";
                     deleteBtn.innerText = "X";
                     deleteBtn.onclick = () => {
-                        // Fjern billedet fra listen og DOM
                         const index = images.indexOf(correctedImg);
                         if (index > -1) images.splice(index, 1);
                         preview.removeChild(container);
-                        saveData(); // Opdater sessionStorage
+                        saveData();
                     };
 
                     container.appendChild(imgElement);
                     container.appendChild(deleteBtn);
                     preview.appendChild(container);
 
-                    saveData(); // Gem ændringer
+                    saveData();
                 });
             };
         };
@@ -109,11 +103,10 @@ function ensureVertical(img, orientation) {
     let width = img.width;
     let height = img.height;
 
-    // Tving rotation, hvis billedet er horisontalt
     if (width > height) {
         canvas.width = height;
         canvas.height = width;
-        ctx.transform(0, 1, -1, 0, height, 0); // Roter 90 grader CW
+        ctx.transform(0, 1, -1, 0, height, 0);
     } else {
         canvas.width = width;
         canvas.height = height;
@@ -123,54 +116,55 @@ function ensureVertical(img, orientation) {
     return canvas.toDataURL("image/jpeg");
 }
 
-// Generér PDF
+// Funktion til sideskift for tekst
+function addTextWithPageBreak(pdf, text, x, y, maxWidth, lineHeight, pageHeight, margin) {
+    const lines = pdf.splitTextToSize(text, maxWidth);
+    lines.forEach((line) => {
+        if (y + lineHeight > pageHeight - margin) {
+            pdf.addPage();
+            y = margin;
+        }
+        pdf.text(line, x, y);
+        y += lineHeight;
+    });
+}
+
 document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pdf = new jsPDF('portrait', 'mm', 'a4');
-    const pageWidth = 210; // A4 bredde i mm
-    const pageHeight = 297; // A4 højde i mm
-    const margin = 10; // 1 cm margin
-    const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin); // Max 4/6 af siden til billedet
-    const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin); // 2/6 til tekst
-    const spaceBetweenBoxes = 5; // Afstand mellem tekstfelter
-    const textBoxWidth = (pageWidth - 2 * margin - spaceBetweenBoxes) / 2; // Bredde for hver tekstboks
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 10;
+    const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin);
+    const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin);
+    const spaceBetweenBoxes = 5;
+    const textBoxWidth = (pageWidth - 2 * margin - spaceBetweenBoxes) / 2;
 
     images.forEach((image, index) => {
         const img = new Image();
         img.src = image;
 
         img.onload = () => {
-            const imgWidth = img.width * 0.264583; // Konverter pixels til mm
+            const imgWidth = img.width * 0.264583;
             const imgHeight = img.height * 0.264583;
 
-            // Skaler billedet til at passe inden for 4/6 af siden
             const scaleFactor = Math.min((pageWidth - 2 * margin) / imgWidth, maxImageHeight / imgHeight);
             const scaledWidth = imgWidth * scaleFactor;
             const scaledHeight = imgHeight * scaleFactor;
 
-            // Center billedet horisontalt og placer det øverst i den vertikale plads
             const xOffset = (pageWidth - scaledWidth) / 2;
             const yOffset = margin;
 
             if (index > 0) pdf.addPage();
             pdf.addImage(image, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
 
-            // Tekstfelter i den nederste 2/6
             const textYStart = yOffset + scaledHeight + 10;
 
-            // Tekst 1 (venstre side)
             const text1 = document.getElementById("text1").value.trim();
-            pdf.setFont("helvetica", "bold");
-            pdf.text("Firma/adresse", margin, textYStart);
-            pdf.setFont("helvetica", "normal");
-            pdf.text(text1, margin, textYStart + 10, { maxWidth: textBoxWidth });
+            addTextWithPageBreak(pdf, text1, margin, textYStart, textBoxWidth, 10, pageHeight, margin);
 
-            // Tekst 2 (højre side)
             const text2 = document.getElementById("text2").value.trim();
             const box2XStart = margin + textBoxWidth + spaceBetweenBoxes;
-            pdf.setFont("helvetica", "bold");
-            pdf.text("Deltagere", box2XStart, textYStart);
-            pdf.setFont("helvetica", "normal");
-            pdf.text(text2, box2XStart, textYStart + 10, { maxWidth: textBoxWidth });
+            addTextWithPageBreak(pdf, text2, box2XStart, textYStart, textBoxWidth, 10, pageHeight, margin);
         };
     });
 

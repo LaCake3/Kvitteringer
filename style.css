@@ -37,6 +37,12 @@ button {
     border: none;
     cursor: pointer;
 }
+textarea#text2 {
+    height: 150px; /* Dobbelt så høj som standard */
+    overflow-y: scroll; /* Tilføj lodret scroll, hvis teksten overstiger pladsen */
+    resize: none; /* Forhindrer brugeren i at ændre størrelsen manuelt */
+}
+
 
 button:hover {
     background-color: #0056b3;

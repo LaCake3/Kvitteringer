@@ -123,19 +123,6 @@ function ensureVertical(img, orientation) {
     return canvas.toDataURL("image/jpeg");
 }
 
-// Funktion til at opdele teksten, hvis den overstiger pladsen
-function addTextWithPageBreak(pdf, text, x, y, maxWidth, lineHeight, pageHeight, margin) {
-    const lines = pdf.splitTextToSize(text, maxWidth);
-    lines.forEach((line) => {
-        if (y + lineHeight > pageHeight - margin) {
-            pdf.addPage();
-            y = margin; // Reset y-position på ny side
-        }
-        pdf.text(line, x, y);
-        y += lineHeight;
-    });
-}
-
 // Generér PDF
 document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pdf = new jsPDF('portrait', 'mm', 'a4');
@@ -145,6 +132,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin); // Max 4/6 af siden til billedet
     const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin); // 2/6 til tekst
     const spaceBetweenBoxes = 5; // Afstand mellem tekstfelter
+    const textBoxWidth = (pageWidth - 2 * margin - spaceBetweenBoxes) / 2; // Bredde for hver tekstboks
 
     images.forEach((image, index) => {
         const img = new Image();
@@ -167,16 +155,22 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             pdf.addImage(image, "JPEG", xOffset, yOffset, scaledWidth, scaledHeight);
 
             // Tekstfelter i den nederste 2/6
+            const textYStart = yOffset + scaledHeight + 10;
+
+            // Tekst 1 (venstre side)
             const text1 = document.getElementById("text1").value.trim();
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Firma/adresse", margin, textYStart);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(text1, margin, textYStart + 10, { maxWidth: textBoxWidth });
+
+            // Tekst 2 (højre side)
             const text2 = document.getElementById("text2").value.trim();
+            const box2XStart = margin + textBoxWidth + spaceBetweenBoxes;
             pdf.setFont("helvetica", "bold");
-            pdf.text("Firma/adresse", margin, yOffset + scaledHeight + 20);
+            pdf.text("Deltagere", box2XStart, textYStart);
             pdf.setFont("helvetica", "normal");
-            pdf.text(text1, margin, yOffset + scaledHeight + 30);
-            pdf.setFont("helvetica", "bold");
-            pdf.text("Deltagere", margin, yOffset + scaledHeight + 50);
-            pdf.setFont("helvetica", "normal");
-            pdf.text(text2, margin, yOffset + scaledHeight + 60);
+            pdf.text(text2, box2XStart, textYStart + 10, { maxWidth: textBoxWidth });
         };
     });
 

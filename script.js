@@ -117,13 +117,21 @@ function ensureVertical(img, orientation) {
 }
 
 // Funktion til sideskift for tekst
-function addTextWithPageBreak(pdf, text, x, y, maxWidth, lineHeight, pageHeight, margin) {
+function addTextWithPageBreak(pdf, title, text, x, y, maxWidth, lineHeight, pageHeight, margin) {
+    pdf.setFont("helvetica", "bold");
+    pdf.text(title, x, y);
+    y += lineHeight; // Flyt ned under overskriften
+
     const lines = pdf.splitTextToSize(text, maxWidth);
     lines.forEach((line) => {
         if (y + lineHeight > pageHeight - margin) {
             pdf.addPage();
             y = margin;
+            pdf.setFont("helvetica", "bold");
+            pdf.text(title, x, y); // Gentag overskriften på ny side
+            y += lineHeight;
         }
+        pdf.setFont("helvetica", "normal");
         pdf.text(line, x, y);
         y += lineHeight;
     });
@@ -135,7 +143,6 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pageHeight = 297;
     const margin = 10;
     const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin);
-    const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin);
     const spaceBetweenBoxes = 5;
     const textBoxWidth = (pageWidth - 2 * margin - spaceBetweenBoxes) / 2;
 
@@ -160,11 +167,11 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             const textYStart = yOffset + scaledHeight + 10;
 
             const text1 = document.getElementById("text1").value.trim();
-            addTextWithPageBreak(pdf, text1, margin, textYStart, textBoxWidth, 10, pageHeight, margin);
+            addTextWithPageBreak(pdf, "Firma/adresse", text1, margin, textYStart, textBoxWidth, 10, pageHeight, margin);
 
             const text2 = document.getElementById("text2").value.trim();
             const box2XStart = margin + textBoxWidth + spaceBetweenBoxes;
-            addTextWithPageBreak(pdf, text2, box2XStart, textYStart, textBoxWidth, 10, pageHeight, margin);
+            addTextWithPageBreak(pdf, "Deltagere", text2, box2XStart, textYStart, textBoxWidth, 10, pageHeight, margin);
         };
     });
 

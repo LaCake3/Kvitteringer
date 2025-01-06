@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PDF Generator</title>
     <link rel="stylesheet" href="style.css">
 
@@ -25,11 +25,21 @@
         <button id="generatePdfBtn">Gem som PDF</button>
         <div id="preview"></div>
     </div>
+
     <!-- Tilføj Exif.js for at håndtere billedrotation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
     <!-- jsPDF til at generere PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <!-- Dit eget script -->
     <script src="script.js"></script>
+    <!-- Tilføj fix til iOS tekstfelter -->
+    <script>
+        // Løsning for at sikre fokus i tekstfelter på iOS
+        document.querySelectorAll("textarea, input").forEach((field) => {
+            field.addEventListener("touchstart", () => {
+                field.focus();
+            });
+        });
+    </script>
 </body>
 </html>

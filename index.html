@@ -34,11 +34,14 @@
     <script src="script.js"></script>
     <!-- Tilføj fix til iOS tekstfelter -->
     <script>
-        // Løsning for at sikre korrekt fokus i tekstfelter på iOS
+        // Løsning for korrekt interaktion med tekstfelter og fil-upload
         document.querySelectorAll("textarea, input").forEach((field) => {
             field.addEventListener("touchstart", (event) => {
-                event.preventDefault(); // Forhindre dobbeltklik eller utilsigtet adfærd
-                field.focus(); // Fokusér kun det aktuelle felt
+                if (field.type !== "file") {
+                    // Forhindr kun standard for tekstfelter og andre inputfelter, ikke fil-upload
+                    event.preventDefault();
+                    field.focus();
+                }
             });
         });
     </script>

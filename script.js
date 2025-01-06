@@ -69,7 +69,19 @@ function ensureVertical(img, orientation) {
     return canvas.toDataURL("image/jpeg");
 }
 
-// Generér PDF
+// Funktion til at opdele teksten, hvis den overstiger pladsen
+function addTextWithPageBreak(pdf, text, x, y, maxWidth, lineHeight, pageHeight, margin) {
+    const lines = pdf.splitTextToSize(text, maxWidth);
+    lines.forEach((line) => {
+        if (y + lineHeight > pageHeight - margin) {
+            pdf.addPage();
+            y = margin; // Reset y-position på ny side
+        }
+        pdf.text(line, x, y);
+        y += lineHeight;
+    });
+}
+
 document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const pdf = new jsPDF('portrait', 'mm', 'a4');
     const pageWidth = 210; // A4 bredde i mm
@@ -78,6 +90,7 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
     const maxImageHeight = (4 / 6) * (pageHeight - 2 * margin); // Max 4/6 af siden til billedet
     const textBoxHeight = (2 / 6) * (pageHeight - 2 * margin); // 2/6 til tekst
     const spaceBetweenBoxes = 5; // Afstand mellem tekstfelter
+    const lineHeight = 10; // Højde på tekstlinjer
     const pdfName = document.getElementById("pdfName").value.trim() || "GeneratedFile";
 
     images.forEach((image, index) => {
@@ -111,16 +124,16 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
             // Tekst 1
             const text1 = document.getElementById("text1").value.trim();
             pdf.setFont("helvetica", "bold");
-            pdf.text("Byggeplads/adresse", box1XStart, textYStart);
+            pdf.text("Firma/adresse", box1XStart, textYStart);
             pdf.setFont("helvetica", "normal");
-            pdf.text(text1, box1XStart, textYStart + 10, { maxWidth: textBoxWidth });
+            addTextWithPageBreak(pdf, text1, box1XStart, textYStart + 10, textBoxWidth, lineHeight, pageHeight, margin);
 
             // Tekst 2
             const text2 = document.getElementById("text2").value.trim();
             pdf.setFont("helvetica", "bold");
             pdf.text("Deltagere", box2XStart, textYStart);
             pdf.setFont("helvetica", "normal");
-            pdf.text(text2, box2XStart, textYStart + 10, { maxWidth: textBoxWidth });
+            addTextWithPageBreak(pdf, text2, box2XStart, textYStart + 10, textBoxWidth, lineHeight, pageHeight, margin);
         };
     });
 

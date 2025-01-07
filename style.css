@@ -38,11 +38,13 @@ button {
     cursor: pointer;
 }
 textarea#text2 {
-    min-height: 150px;
-    height: 20vh; /* Dynamisk højde baseret på skærmstørrelse */
-    overflow-y: scroll;
-    resize: none;
-    -webkit-overflow-scrolling: touch;
+    height: 100px; /* Sæt højden */
+    overflow-y: auto; /* Alternativ til scroll */
+    resize: none; /* Forhindre manuel ændring af størrelsen */
+    -webkit-overflow-scrolling: touch; /* Aktivér glat scroll på iOS */
+    border: 1px solid #ccc; /* Sørg for, at feltet er visuelt markeret */
+    padding: 10px; /* Tilføj lidt indvendig plads for bedre oplevelse */
+    font-size: 14px; /* Gør teksten mere læsbar på mobil */
 }
 
 

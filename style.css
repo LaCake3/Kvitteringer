@@ -45,7 +45,7 @@ button {
 }
 
 textarea#text2 {
-    height: 100%; /* Fylder hele containeren */
+    height: 150%; /* Fylder hele containeren */
     resize: none; /* Forhindre manuel ændring af størrelse */
     border: 1px solid #ccc;
     padding: 10px; /* Indvendig margen */

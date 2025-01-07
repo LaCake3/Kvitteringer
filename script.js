@@ -179,3 +179,11 @@ document.getElementById("generatePdfBtn").addEventListener("click", () => {
         pdf.save(document.getElementById("pdfName").value.trim() || "GeneratedFile.pdf");
     }, 1000);
 });
+
+document.getElementById("text2").addEventListener("focus", function () {
+    this.style.overflowY = "scroll"; // Aktivér scroll, når feltet får fokus
+});
+
+document.getElementById("text2").addEventListener("blur", function () {
+    this.style.overflowY = "hidden"; // Skjul scroll-bar, når feltet mister fokus
+});

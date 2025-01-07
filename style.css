@@ -26,6 +26,26 @@ textarea, input, button {
     border-radius: 5px;
     font-size: 14px;
 }
+.scroll-wrapper {
+    height: 150px; /* Højden på containeren */
+    overflow-y: scroll; /* Permanent lodret scroll-bar */
+    -webkit-overflow-scrolling: touch; /* Glat scroll på iOS */
+    border: 1px solid #ccc; /* Ramme for containeren */
+    padding: 5px;
+    box-sizing: border-box; /* Inkluder padding i højden */
+    background-color: #f9f9f9; /* Lys baggrund */
+}
+
+textarea#text2 {
+    height: 100%; /* Tekstfeltet fylder hele containerens højde */
+    width: 100%; /* Fylder hele bredden af containeren */
+    border: none; /* Fjern ramme, da containeren håndterer det */
+    resize: none; /* Forhindrer manuel ændring af størrelse */
+    font-size: 16px; /* Justér tekststørrelsen for læsbarhed */
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: transparent; /* Fjern baggrund for ensartet udseende */
+}
 
 textarea {
     resize: none;

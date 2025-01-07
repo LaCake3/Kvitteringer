@@ -28,7 +28,7 @@ textarea, input, button {
 }
 
 textarea {
-resize: none;
+    resize: none;
 }
 
 button {
@@ -36,29 +36,6 @@ button {
     color: #fff;
     border: none;
     cursor: pointer;
-}
-
-textarea#text2 {
-    height: 150px; /* Fylder hele containeren */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid #ccc;
-    padding: 10px; /* Indvendig margen */
-    font-size: 14px;
-    background-color: #ffffff;
-}
-
-#versionNumber {
-    position: fixed;
-    bottom: 10px; /* Afstand fra bunden */
-    left: 10px; /* Afstand fra venstre */
-    width: 40px; /* Bredde på feltet */
-    height: 30px; /* Højde på feltet */
-    font-size: 10px; /* Mindre tekststørrelse */
-    border: 1px solid #ccc; /* Lys grænse for tydelighed */
-    border-radius: 5px; /* Runde hjørner */
-    padding: 5px; /* Indvendig margen */
-    background-color: #f9f9f9; /* Lys baggrund */
 }
 
 button:hover {
@@ -92,4 +69,37 @@ button:hover {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+/* Ny scroll-wrapper til textarea#text2 */
+.scroll-wrapper {
+    height: 150px; /* Højden på containeren */
+    overflow-y: auto; /* Tilføj scroll til containeren */
+    -webkit-overflow-scrolling: touch; /* Glat scroll på iOS */
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-sizing: border-box; /* Inkluder padding i højden */
+}
+
+textarea#text2 {
+    height: 100%; /* Tekstfeltet fylder hele containerens højde */
+    width: 100%; /* Fylder hele bredden af containeren */
+    border: none; /* Fjern ramme, da containeren styrer stilen */
+    resize: none; /* Forhindrer manuel ændring af størrelse */
+    font-size: 16px; /* Justér tekststørrelsen for læsbarhed */
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#versionNumber {
+    position: fixed;
+    bottom: 10px; /* Afstand fra bunden */
+    left: 10px; /* Afstand fra venstre */
+    width: 40px; /* Bredde på feltet */
+    height: 30px; /* Højde på feltet */
+    font-size: 10px; /* Mindre tekststørrelse */
+    border: 1px solid #ccc; /* Lys grænse for tydelighed */
+    border-radius: 5px; /* Runde hjørner */
+    padding: 5px; /* Indvendig margen */
+    background-color: #f9f9f9; /* Lys baggrund */
 }

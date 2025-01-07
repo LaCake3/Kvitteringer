@@ -73,8 +73,8 @@ button:hover {
 
 /* Ny scroll-wrapper til textarea#text2 */
 .scroll-wrapper {
-    height: 150px; /* Højden på containeren */
-    overflow-y: auto; /* Tilføj scroll til containeren */
+    height: 120px; /* Højden på containeren */
+    overflow-y: scroll; /* Tilføj scroll til containeren */
     -webkit-overflow-scrolling: touch; /* Glat scroll på iOS */
     border: 1px solid #ccc;
     padding: 5px;

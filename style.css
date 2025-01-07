@@ -30,7 +30,7 @@ textarea, input, button {
     height: 150px; /* Højden på containeren */
     overflow-y: scroll; /* Permanent lodret scroll-bar */
     -webkit-overflow-scrolling: touch; /* Glat scroll på iOS */
-    border: 1px solid #ccc; /* Ramme for containeren */
+    border: 1px solid #000000; /* Ramme for containeren */
     padding: 5px;
     box-sizing: border-box; /* Inkluder padding i højden */
     background-color: #f9f9f9; /* Lys baggrund */

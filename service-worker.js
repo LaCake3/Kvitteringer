@@ -1,4 +1,4 @@
-const cacheName = "pdf-generator-v11.1"; // Skift cache-navn ved nye versioner
+const cacheName = "pdf-generator-v2"; // Skift cache-navn ved nye versioner
 const staticAssets = [
     "./",
     "./index.html",
@@ -36,4 +36,5 @@ self.addEventListener("fetch", (event) => {
 // Brug cache først og hent fra netværk som fallback
 async function cacheFirst(request) {
     const cachedResponse = await caches.match(request);
-    return cachedResponse || fetch(reques
+    return cachedResponse || fetch(request);
+}

@@ -32,9 +32,3 @@ self.addEventListener("fetch", (event) => {
     const request = event.request;
     event.respondWith(cacheFirst(request));
 });
-
-// Brug cache først og hent fra netværk som fallback
-async function cacheFirst(request) {
-    const cachedResponse = await caches.match(request);
-    return cachedResponse || fetch(request);
-}

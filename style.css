@@ -37,15 +37,20 @@ button {
     border: none;
     cursor: pointer;
 }
+
+.scroll-container {
+    height: 150px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Glat scroll for iOS */
+}
+
 textarea#text2 {
-    height: 100px; /* Højden på tekstfeltet */
-    overflow-y: auto; /* Tilføj lodret scroll */
-    resize: none; /* Forhindrer manuel ændring af størrelse */
-    -webkit-overflow-scrolling: touch; /* Gør scroll glat på iOS */
-    border: 1px solid #ccc; /* Ramme omkring tekstfeltet */
+    height: 100%; /* Fylder hele containeren */
+    resize: none; /* Forhindre manuel ændring af størrelse */
+    border: none; /* Fjern ramme inde i containeren */
     padding: 10px; /* Indvendig margen */
-    font-size: 16px; /* Tekststørrelse */
-    background-color: #ffffff; /* Lys baggrund for klarhed */
+    font-size: 16px;
+    background-color: #ffffff;
 }
 
 #versionNumber {

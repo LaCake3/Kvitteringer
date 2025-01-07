@@ -38,18 +38,14 @@ button {
     cursor: pointer;
 }
 
-.scroll-container {
-    height: 150px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Glat scroll for iOS */
-}
-
 textarea#text2 {
-    height: 150%; /* Fylder hele containeren */
+    height: 150px; /* Fylder hele containeren */
+    overflow-y: auto;
     resize: none; /* Forhindre manuel ændring af størrelse */
+-webkit-overflow-scrolling: touch;
     border: 1px solid #ccc;
     padding: 10px; /* Indvendig margen */
-    font-size: 16px;
+    font-size: 14px;
     background-color: #ffffff;
 }
 

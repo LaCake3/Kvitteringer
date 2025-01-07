@@ -91,15 +91,18 @@ button:hover {
     cursor: pointer;
 }
 
-#versionNumber {
-    position: fixed;
-    bottom: 10px; /* Afstand fra bunden */
-    left: 10px; /* Afstand fra venstre */
-    width: 40px; /* Bredde på feltet */
-    height: 30px; /* Højde på feltet */
-    font-size: 10px; /* Mindre tekststørrelse */
-    border: 1px solid #ccc; /* Lys grænse for tydelighed */
-    border-radius: 5px; /* Runde hjørner */
-    padding: 5px; /* Indvendig margen */
-    background-color: #f9f9f9; /* Lys baggrund */
+.version-label,
+.version-field {
+    position: fixed; /* Fastgør elementet til vinduet */
+    bottom: 10px;    /* Afstand fra bunden */
+    left: 10px;      /* Afstand fra venstre */
+    z-index: 1000;   /* Sørg for, at det er ovenpå andre elementer */
+    background-color: #f0f0f0; /* Baggrundsfarve for synlighed */
+    padding: 5px;    /* Gør det lidt mere læsbart */
+    border-radius: 5px; /* Runde kanter for æstetik */
+    border: 1px solid #ccc; /* En let kant */
+}
+
+.version-field {
+    margin-left: 5px; /* Lidt afstand mellem label og input */
 }

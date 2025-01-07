@@ -41,6 +41,7 @@ textarea#text2 {
     height: 150px !important; /* Dobbelt så høj som standard */
     overflow-y: scroll !important; /* Tilføj lodret scroll, hvis teksten overstiger pladsen */
     resize: none !important; /* Forhindrer brugeren i at ændre størrelsen manuelt */
+    -webkit-overflow-scrolling: touch; /* Glat scroll på iOS */
 }
 
 

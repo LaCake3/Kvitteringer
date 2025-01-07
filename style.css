@@ -82,17 +82,13 @@ button:hover {
 }
 
 textarea#text2 {
-    position: absolute;
-    bottom: 0; /* Placer i bunden */
-    left: 0; /* Placer i venstre hjørne */
-    height: 150px;
-    width: calc(100% - 20px); /* Gør plads til margin */
-    overflow-y: auto; /* Tilføj scroll */
-    resize: none;
-    font-size: 16px;
-    padding: 10px;
+    height: 100%; /* Tekstfeltet fylder hele containerens højde */
+    width: 100%; /* Fylder hele bredden af containeren */
+    border: none; /* Fjern ramme, da containeren styrer stilen */
+    resize: none; /* Forhindrer manuel ændring af størrelse */
+    font-size: 16px; /* Justér tekststørrelsen for læsbarhed */
+    padding: 5px;
     box-sizing: border-box;
-    -webkit-overflow-scrolling: touch;
 }
 
 #versionNumber {

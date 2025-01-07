@@ -38,11 +38,11 @@ button {
     cursor: pointer;
 }
 textarea#text2 {
-    height: 100px !important; /* Dobbelt så høj som standard */
-    overflow-y: scroll !important; /* Tilføj lodret scroll, hvis teksten overstiger pladsen */
+    min-height: 150px;
     height: 20vh; /* Dynamisk højde baseret på skærmstørrelse */
-    resize: none !important; /* Forhindrer brugeren i at ændre størrelsen manuelt */
-    -webkit-overflow-scrolling: touch; /* Glat scroll på iOS */
+    overflow-y: scroll;
+    resize: none;
+    -webkit-overflow-scrolling: touch;
 }
 
 

@@ -47,7 +47,7 @@ button {
 textarea#text2 {
     height: 100%; /* Fylder hele containeren */
     resize: none; /* Forhindre manuel ændring af størrelse */
-    border: none; /* Fjern ramme inde i containeren */
+    border: 1px solid #ccc;
     padding: 10px; /* Indvendig margen */
     font-size: 16px;
     background-color: #ffffff;

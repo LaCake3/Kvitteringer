@@ -41,8 +41,7 @@ button {
 textarea#text2 {
     height: 150px; /* Fylder hele containeren */
     overflow-y: auto;
-    resize: none; /* Forhindre manuel ændring af størrelse */
--webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid #ccc;
     padding: 10px; /* Indvendig margen */
     font-size: 14px;

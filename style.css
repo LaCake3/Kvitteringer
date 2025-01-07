@@ -38,7 +38,7 @@ button {
     cursor: pointer;
 }
 textarea#text2 {
-    height: 150px !important; /* Dobbelt så høj som standard */
+    height: 100px !important; /* Dobbelt så høj som standard */
     overflow-y: scroll !important; /* Tilføj lodret scroll, hvis teksten overstiger pladsen */
     height: 20vh; /* Dynamisk højde baseret på skærmstørrelse */
     resize: none !important; /* Forhindrer brugeren i at ændre størrelsen manuelt */

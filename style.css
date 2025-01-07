@@ -38,7 +38,7 @@ textarea, input, button {
 
 textarea#text2 {
     height: 100%; /* Tekstfeltet fylder hele containerens højde */
-    width: 100%; /* Fylder hele bredden af containeren */
+    width: 90%; /* Fylder hele bredden af containeren */
     border: none; /* Fjern ramme, da containeren håndterer det */
     resize: none; /* Forhindrer manuel ændring af størrelse */
     font-size: 16px; /* Justér tekststørrelsen for læsbarhed */

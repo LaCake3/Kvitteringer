@@ -42,7 +42,7 @@ textarea#text2 {
     border: none; /* Fjern ramme, da containeren håndterer det */
     resize: none; /* Forhindrer manuel ændring af størrelse */
     font-size: 16px; /* Justér tekststørrelsen for læsbarhed */
-    padding: 5px;
+    padding: 0;
     box-sizing: border-box;
     background-color: transparent; /* Fjern baggrund for ensartet udseende */
 }

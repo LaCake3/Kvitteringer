@@ -38,19 +38,21 @@ button {
     cursor: pointer;
 }
 textarea#text2 {
-    height: 100px; /* Sæt højden */
-    overflow-y: auto; /* Alternativ til scroll */
-    resize: none; /* Forhindre manuel ændring af størrelsen */
-    -webkit-overflow-scrolling: touch; /* Aktivér glat scroll på iOS */
-    border: 1px solid #ccc; /* Sørg for, at feltet er visuelt markeret */
-    padding: 10px; /* Tilføj lidt indvendig plads for bedre oplevelse */
-    font-size: 14px; /* Gør teksten mere læsbar på mobil */
+    height: 100px; /* Højden på tekstfeltet */
+    overflow-y: auto; /* Tilføj lodret scroll */
+    resize: none; /* Forhindrer manuel ændring af størrelse */
+    -webkit-overflow-scrolling: touch; /* Gør scroll glat på iOS */
+    border: 1px solid #ccc; /* Ramme omkring tekstfeltet */
+    padding: 10px; /* Indvendig margen */
+    font-size: 16px; /* Tekststørrelse */
+    background-color: #ffffff; /* Lys baggrund for klarhed */
 }
+
 #versionNumber {
     position: fixed;
     bottom: 10px; /* Afstand fra bunden */
     left: 10px; /* Afstand fra venstre */
-    width: 80px; /* Bredde på feltet */
+    width: 40px; /* Bredde på feltet */
     height: 30px; /* Højde på feltet */
     font-size: 10px; /* Mindre tekststørrelse */
     border: 1px solid #ccc; /* Lys grænse for tydelighed */

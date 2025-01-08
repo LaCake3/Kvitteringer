@@ -92,6 +92,7 @@ button:hover {
 }
 
 .version-field {
+    width: 10ch;
     position: fixed; /* Fastgør elementet til vinduet */
     bottom: 10px;    /* Afstand fra bunden */
     left: 10px;      /* Afstand fra venstre */

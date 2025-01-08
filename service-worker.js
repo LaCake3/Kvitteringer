@@ -1,4 +1,4 @@
-const cacheName = "pdf-generator-V1.9.9.4"; // Skift cache-navn ved nye versioner
+const cacheName = "pdf-generator-V1.9.9.5"; // Skift cache-navn ved nye versioner
 const staticAssets = [
     "./",
     "./index.html",
